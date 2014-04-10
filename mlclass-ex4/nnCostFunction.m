@@ -22,6 +22,12 @@ Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
 Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
                  num_labels, (hidden_layer_size + 1));
 
+%disp(size(Theta1));
+%disp(Theta1);
+
+%disp(size(Theta2));
+%disp(Theta2);
+
 % Setup some useful variables
 m = size(X, 1);
          
@@ -60,21 +66,23 @@ J /= m;
 
 % Regularized cost function
 %disp('theta1');
-%disp(size(Theta1));
+
 t1reg = 0;
+%disp('size t1');
+%disp(hidden_layer_size);
+%disp(input_layer_size);
 for(j = 1 : hidden_layer_size)
-   for(k = 1 : input_layer_size-1);
-      t1reg += Theta1(j,k)^2;
+   for(k = 1 : input_layer_size);
+      t1reg += Theta1(j,k+1)^2;
    end;
 end;
 
 %disp('theta2');
-%disp(size(Theta2));
 
 t2reg = 0;
 for(j = 1 : num_labels)
-   for(k = 1 : hidden_layer_size-1);
-      t2reg += Theta2(j,k)^2;
+   for(k = 1 : hidden_layer_size);
+      t2reg += Theta2(j,k+1)^2;
    end;
 end;
 
