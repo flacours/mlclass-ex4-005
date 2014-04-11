@@ -105,6 +105,24 @@ J += ( lambda / (2 * m)) * (t1reg + t2reg);
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
+
+for(i = 1 : m)
+% need to recode the output
+   yrecoded = zeros(num_labels,1);
+   yrecoded(y(i)) = 1;
+
+% 1 set input values and compute activation
+
+% 2 compute delta_3
+
+% 3 compute delta_2
+
+% 4 accumulate the gradient
+
+% 5 obtain the unregularized gradient
+   
+end;
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
