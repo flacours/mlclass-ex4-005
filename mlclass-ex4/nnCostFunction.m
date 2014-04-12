@@ -22,17 +22,19 @@ Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
 Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
                  num_labels, (hidden_layer_size + 1));
 
-%fprintf("num_labels       = %d\n", num_labels);
-%fprintf("input_layer_size = %d\n", input_layer_size);
-%fprintf("hidden_layer_size= %d\n", hidden_layer_size);
-%disp(size(Theta1));
+fprintf("num_labels       = %d\n", num_labels);
+fprintf("input_layer_size = %d\n", input_layer_size);
+fprintf("hidden_layer_size= %d\n", hidden_layer_size);
+disp(size(Theta1));
 %disp(Theta1);
 
-%disp(size(Theta2));
+disp(size(Theta2));
 %disp(Theta2);
 
 % Setup some useful variables
 m = size(X, 1);
+
+fprintf("m = %d\n", m);
          
 % You need to return the following variables correctly 
 J = 0;
@@ -126,21 +128,21 @@ for(i = 1 : m) %
     a_1 = a1(i, :);
     a_2 = a2(i, :);
     a_3 = a3(i, :);
-
 % 2 compute delta_3
     delta_3 = a_3' - yrecoded;
-
 % 3 compute delta_2
     sg = sigmoidGradient(a_2)';
-%    disp('size sg');
-%    disp(size(sg));
-    delta_2 = (Theta2' * delta_3) .* sg;
+%disp('sg');
+%disp(size(sg));
 
+    delta_2 = (Theta2' * delta_3) .* sg;
+%disp('d_2');
+%disp(size(delta_2));
 
 % 4 accumulate the gradient
-    delta_2 = delta_2(2:end);
-    a_1 = a_1(:, 2:end);
-    a_2 = a_2(:, 2:end);
+%    delta_2 = delta_2(2:end);
+%    a_1 = a_1(:, 2:end);
+%    a_2 = a_2(:, 2:end);
 %    disp('size delta_2');
 %    size(delta_2)
 %    disp('a_1');
@@ -149,13 +151,20 @@ for(i = 1 : m) %
 %    size(  delta_3)
 %    disp('a_2');
 %    size(a_2)
-    d2 = delta_2 * a_1;
-%    disp('size d2');
-%    size(d2)
-    d3 = delta_3 * a_2;
-%    disp('size d3');
-    Theta1_grad += [emptycol d2];
-    Theta2_grad += [emptycol d3];
+    inc1 = delta_2 * a_1;
+%    disp('size inc1');
+%    size(inc1)
+%    disp(inc1);
+
+    inc2 = delta_3 * a_2;
+%    disp('size inc2');
+%    size(inc2)
+%    disp(inc2);
+
+%size(inc1(2:end,:))
+
+    Theta1_grad += inc1(2:end,:);
+    Theta2_grad += inc2;
 end;
 % 5 obtain the unregularized gradient
     Theta1_grad /= m;
