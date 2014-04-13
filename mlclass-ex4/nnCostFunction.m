@@ -22,19 +22,20 @@ Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
 Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
                  num_labels, (hidden_layer_size + 1));
 
-fprintf("num_labels       = %d\n", num_labels);
-fprintf("input_layer_size = %d\n", input_layer_size);
-fprintf("hidden_layer_size= %d\n", hidden_layer_size);
-disp(size(Theta1));
+
+%fprintf("num_labels       = %d\n", num_labels);
+%fprintf("input_layer_size = %d\n", input_layer_size);
+%fprintf("hidden_layer_size= %d\n", hidden_layer_size);
+%disp(size(Theta1));
 %disp(Theta1);
 
-disp(size(Theta2));
+%disp(size(Theta2));
 %disp(Theta2);
 
 % Setup some useful variables
 m = size(X, 1);
 
-fprintf("m = %d\n", m);
+%fprintf("m = %d\n", m);
          
 % You need to return the following variables correctly 
 J = 0;
@@ -55,6 +56,9 @@ J = 0;
 a1 = [ones(m, 1) X];
 z2 = Theta1 * a1';
 a2 = sigmoid(z2)';
+%disp('size z2, a2');
+%size(z2)
+%size(a2)
 m2 = size(a2,1);
 a2 = [ones(m2, 1) a2];
 a3 = sigmoid(Theta2 * a2')';
@@ -115,9 +119,6 @@ J += ( lambda / (2 * m)) * (t1reg + t2reg);
 %size(a2)
 %size(a3)
 %fprintf("m=%d\n", m);
-emptycol = zeros(num_labels,1);
-%disp('size empty col');
-%size(emptycol)
 for(i = 1 : m) %
 % need to recode the output
    yrecoded = zeros(num_labels,1);
@@ -125,50 +126,53 @@ for(i = 1 : m) %
 
 % 1 set input values and compute activation
 
-    a_1 = a1(i, :);
-    a_2 = a2(i, :);
-    a_3 = a3(i, :);
+    a_1 = a1(i, :)';
+    a_2 = a2(i, :)';
+    z_2 = z2(:, i);
+%    disp('size z_2');
+%    size(z_2)
+    a_3 = a3(i, :)';
 % 2 compute delta_3
-    delta_3 = a_3' - yrecoded;
+    delta_3 = a_3 - yrecoded;
 % 3 compute delta_2
-    sg = sigmoidGradient(a_2)';
+%disp('size z2');
+%size(z_2)
+    sg = sigmoidGradient(z_2);
 %disp('sg');
 %disp(size(sg));
+%disp('t2');
+%disp(Theta2');
+%disp('d3');
+%disp(size(delta_3));
+%disp(delta_3);
+td = (Theta2' * delta_3);
+%disp('td');
+%disp(size(td));
+%disp(td);
+%disp('sg');
+%disp(sg);
 
-    delta_2 = (Theta2' * delta_3) .* sg;
+    delta_2 = td .* [1; sg];
 %disp('d_2');
 %disp(size(delta_2));
+%disp(delta_2);
 
 % 4 accumulate the gradient
-%    delta_2 = delta_2(2:end);
-%    a_1 = a_1(:, 2:end);
-%    a_2 = a_2(:, 2:end);
-%    disp('size delta_2');
-%    size(delta_2)
-%    disp('a_1');
-%    size(a_1)
-%    disp('size delta_3');
-%    size(  delta_3)
-%    disp('a_2');
-%    size(a_2)
-    inc1 = delta_2 * a_1;
+    inc1 = delta_2(2:end) * a_1';
 %    disp('size inc1');
 %    size(inc1)
 %    disp(inc1);
+    Theta1_grad += inc1;
 
-    inc2 = delta_3 * a_2;
+    inc2 = delta_3 * a_2';
 %    disp('size inc2');
 %    size(inc2)
 %    disp(inc2);
-
-%size(inc1(2:end,:))
-
-    Theta1_grad += inc1(2:end,:);
     Theta2_grad += inc2;
 end;
 % 5 obtain the unregularized gradient
-    Theta1_grad /= m;
-    Theta2_grad /= m;
+Theta1_grad /= m;
+Theta2_grad /= m;
 
 % Part 3: Implement regularization with the cost function and gradients.
 %
